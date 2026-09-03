@@ -5,6 +5,7 @@ Version: 1.0 | Stack: Next.js 15 + Medusa v2 + Supabase + Netlify + Render
 
 ## 1. PROJECT STRUCTURE
 
+```bash
 man_fashion_e_commerce/
 ├── .github/
 │   └── workflows/
@@ -58,12 +59,14 @@ man_fashion_e_commerce/
 ├── .env.local.example
 ├── README.md
 └── SPEC.md (this file)
+```
 
 ---
 
 ## 2. DATABASE SCHEMA (Prisma + Medusa Extensions)
 
 ### Medusa Core Tables (Managed by Medusa — Do Not Modify)
+
 - `product`, `product_variant`, `product_option`, `product_option_value`
 - `product_category`, `product_collection`, `product_tag`
 - `product_image`, `product_variant_inventory_item`
@@ -259,7 +262,8 @@ model SizeRecommendationLog {
 ## 3. API CONTRACTS
 
 ### Medusa REST Endpoints (Standard)
-```
+
+```bash
 GET    /store/products                    # List products (filter, paginate)
 GET    /store/products/:id                # Product detail
 GET    /store/products/:id/variants       # Variants with inventory
@@ -280,7 +284,8 @@ POST   /store/auth/token                  # Refresh token
 ### Custom API Routes (Next.js API Routes → Medusa Custom Endpoints)
 
 #### Virtual Try-On
-```
+
+```bash
 POST   /api/tryon/generate
 Request:
 {
@@ -316,7 +321,8 @@ DELETE /api/tryon/:id
 ```
 
 #### User Profile & Measurements
-```
+
+```bash
 GET    /api/profile/me
 PUT    /api/profile/me
 {
@@ -335,7 +341,8 @@ Response: { diagrams: [...], videoUrl: "...", instructions: "..." }
 ```
 
 #### Size Recommendation
-```
+
+```bash
 POST   /api/size-recommendation
 {
   "productId": "prod_123",
@@ -353,7 +360,8 @@ Response:
 ```
 
 #### Wishlist
-```
+
+```bash
 GET    /api/wishlist
 POST   /api/wishlist
 {
@@ -369,6 +377,7 @@ DELETE /api/wishlist/:productId/:variantId?
 ## 4. ENVIRONMENT VARIABLES
 
 ### Frontend (.env.local)
+
 ```bash
 # App
 NEXT_PUBLIC_APP_URL=https://your-domain.netlify.app
@@ -415,6 +424,7 @@ NEXT_PUBLIC_VERCEL_ANALYTICS_ID=...
 ```
 
 ### Backend / Medusa (.env)
+
 ```bash
 # Database
 DATABASE_URL=postgresql://postgres:password@localhost:5432/medusa
@@ -461,6 +471,7 @@ Set all frontend vars in Netlify dashboard → Site settings → Environment var
 ## 5. GITHUB ACTIONS CI/CD
 
 ### `.github/workflows/ci.yml`
+
 ```yaml
 name: CI
 on: [push, pull_request]
@@ -485,6 +496,7 @@ jobs:
 ```
 
 ### `.github/workflows/deploy-frontend.yml`
+
 ```yaml
 name: Deploy Frontend to Netlify
 on:
@@ -509,6 +521,7 @@ jobs:
 ```
 
 ### `.github/workflows/deploy-backend.yml`
+
 ```yaml
 name: Deploy Backend to Render
 on:
@@ -530,6 +543,7 @@ jobs:
 ## 6. MOBILE-FIRST RESPONSIVE DESIGN SYSTEM
 
 ### Tailwind Breakpoints (Mobile-First)
+
 ```typescript
 // tailwind.config.ts
 export default {
@@ -563,6 +577,7 @@ export default {
 ```
 
 ### Touch Target Standards (WCAG 2.1 AA)
+
 ```css
 /* Global minimum touch target */
 .touch-target {
@@ -586,6 +601,7 @@ export default {
 ```
 
 ### Mobile Navigation Pattern
+
 ```tsx
 // components/layout/MobileNav.tsx
 // Bottom tab bar (iOS style) or Hamburger + Slide-over drawer
@@ -594,6 +610,7 @@ export default {
 ```
 
 ### Responsive Product Grid
+
 ```tsx
 // Mobile: 2 columns (xs) → 3 columns (sm) → 4 columns (md) → 5 columns (lg)
 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -602,6 +619,7 @@ export default {
 ```
 
 ### Image Optimization (Cloudinary)
+
 ```typescript
 // lib/cloudinary.ts
 export function getOptimizedImageUrl(
@@ -627,6 +645,7 @@ export function getOptimizedImageUrl(
 ## 7. VIRTUAL TRY-ON INTEGRATION DETAILS
 
 ### fal.ai IDM-VTON API Client
+
 ```typescript
 // lib/fal.ts
 import { fal } from '@fal-ai/serverless-client';
@@ -677,6 +696,7 @@ export function getGarmentType(categoryPath: string): TryOnInput['garment_type']
 ```
 
 ### Try-On Flow (Client-Side)
+
 ```tsx
 // components/tryon/TryOnButton.tsx
 'use client';
@@ -734,7 +754,8 @@ export function TryOnButton({ product }: { product: Product }) {
 ```
 
 ### Full-Body Try-On Strategy
-| Approach | Description | Pros | Cons |
+
+|  Approach  |  Description  |  Pros  |  Cons  |
 |----------|-------------|------|------|
 | **Single Model** | CatVTON or future full-body model | One call | Limited availability |
 | **Compose** | Upper + Lower separately → stitch | Works today | Alignment challenges |
@@ -747,6 +768,7 @@ export function TryOnButton({ product }: { product: Product }) {
 ## 8. SIZE RECOMMENDATION ENGINE
 
 ### Algorithm (MVP: Rule-Based)
+
 ```typescript
 // lib/size-recommendation.ts
 interface Measurement {
@@ -800,6 +822,7 @@ export function recommendSize(
 ```
 
 ### Future: ML-Based (Post-MVP)
+
 - Train on: user measurements + purchased size + return/fit feedback
 - Features: body measurements, product fit type, brand sizing bias, category
 - Model: Gradient boosting (XGBoost) or simple neural net
@@ -810,6 +833,7 @@ export function recommendSize(
 ## 9. PHASE-BY-PHASE IMPLEMENTATION PLAN
 
 ### Phase 0: Foundation (Week 1)
+
 - [ ] Initialize monorepo (or separate frontend/backend repos)
 - [ ] Set up Docker Compose (Postgres + Medusa)
 - [ ] Next.js 15 + TypeScript + Tailwind + shadcn/ui
@@ -820,6 +844,7 @@ export function recommendSize(
 - [ ] Environment variable templates
 
 ### Phase 1: Commerce Core (Week 2-3)
+
 - [ ] Medusa backend setup + admin user
 - [ ] Product categories + collections seeded
 - [ ] Product Extension module (custom fields)
@@ -830,6 +855,7 @@ export function recommendSize(
 - [ ] Order confirmation + email (Resend/SendGrid)
 
 ### Phase 2: Auth & Profile (Week 3)
+
 - [ ] NextAuth v5: Google + Email/Password
 - [ ] Protected routes middleware
 - [ ] User profile page (edit info, avatar upload → Cloudinary)
@@ -837,6 +863,7 @@ export function recommendSize(
 - [ ] Size preference per category/brand
 
 ### Phase 3: Virtual Try-On (Week 4)
+
 - [ ] fal.ai account + API key
 - [ ] User photo upload (Cloudinary signed uploads)
 - [ ] Try-On API route (proxy to fal.ai)
@@ -845,6 +872,7 @@ export function recommendSize(
 - [ ] ProductExtension.tryOnGarmentImageUrl prep (background job)
 
 ### Phase 4: Size Recommendation (Week 5)
+
 - [ ] Size chart data structure (JSON in ProductExtension)
 - [ ] Size recommendation API (rule-based)
 - [ ] SizeRecommendation component on product page
@@ -852,6 +880,7 @@ export function recommendSize(
 - [ ] "Find My Size" CTA in header (mobile sticky)
 
 ### Phase 5: Wishlist & Polish (Week 5-6)
+
 - [ ] Wishlist (heart icon, dedicated page)
 - [ ] Recently viewed (localStorage + server sync)
 - [ ] Search (Meilisearch plugin for Medusa)
@@ -861,6 +890,7 @@ export function recommendSize(
 - [ ] Performance audit (Lighthouse CI)
 
 ### Phase 6: Launch Prep (Week 6)
+
 - [ ] SEO: sitemap, robots.txt, meta tags, JSON-LD
 - [ ] Error boundaries + Sentry (free tier)
 - [ ] Analytics (Vercel Analytics / Plausible)
@@ -872,7 +902,7 @@ export function recommendSize(
 
 ## 10. KEY DECISIONS & TRADEOFFS
 
-| Decision | Choice | Rationale |
+|  Decision  |  Choice  |  Rationale  |
 |----------|--------|-----------|
 | Monorepo vs Separate | **Separate repos** (frontend/backend) | Independent deploys, clearer ownership, Netlify/Render config simpler |
 | Medusa Customizations | **Custom modules + API routes** | Keeps Medusa upgradable, separates concerns |
@@ -888,7 +918,7 @@ export function recommendSize(
 
 ## 11. ESTIMATED TIMELINE & EFFORT
 
-| Phase | Duration | Effort | Dependencies |
+|  Phase  |  Duration  |  Effort  |  Dependencies  |
 |-------|----------|--------|--------------|
 | 0: Foundation | 1 week | Medium | None |
 | 1: Commerce Core | 2 weeks | High | Phase 0 |
@@ -903,7 +933,7 @@ export function recommendSize(
 
 ## 12. RISKS & MITIGATIONS
 
-| Risk | Likelihood | Impact | Mitigation |
+|  Risk  |  Likelihood  |  Impact  |  Mitigation |
 |------|------------|--------|------------|
 | Medusa v2 breaking changes | Medium | High | Pin version, test upgrades in branch |
 | fal.ai API changes / pricing | Low | Medium | Abstract behind interface; monitor changelog |
@@ -917,7 +947,7 @@ export function recommendSize(
 
 ## 13. PRODUCT CATEGORY HIERARCHY
 
-```
+```bash
 🏷️  CATEGORIES
 ├── 🧥 Outerwear
 │   ├── Heavy Duty (workwear, waterproof, insulated)
@@ -968,7 +998,7 @@ export function recommendSize(
 
 ## 14. TECH STACK SUMMARY
 
-| Layer | Technology | Version | Free Tier |
+|  Layer  |  Technology  |  Version  |  Free Tier  |
 |-------|------------|---------|-----------|
 | Frontend Framework | Next.js | 15 (App Router) | N/A (OSS) |
 | Language | TypeScript | 5.x | N/A |
