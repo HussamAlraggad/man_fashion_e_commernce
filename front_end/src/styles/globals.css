@@ -1,0 +1,323 @@
+/* ============================================
+   DESIGN SYSTEM TOKENS — From DESIGN.md
+   OKLCH Palette, Typography, Spacing, Motion
+   ============================================ */
+
+:root {
+  /* ── Color Palette (OKLCH) ────────────────────────────── */
+  /* Color Strategy: COMMITTED (30–60% surface) */
+  /* Primary: Deep petrol teal — authoritative, refined */
+  /* Accent: Warm brass — complementary warmth */
+
+  /* Background — pure white. Brand lives in primary, not surface. */
+  --color-bg: oklch(1.000 0.000 0);
+  --color-bg-elevated: oklch(0.985 0.000 0);
+
+  /* Surface — bg pulled 8% toward ink. Cards, panels, dropdowns. */
+  --color-surface: oklch(0.985 0.002 170);
+  --color-surface-hover: oklch(0.970 0.003 170);
+
+  /* Ink — body text. Near-black with 3% brand hue tint. */
+  --color-ink: oklch(0.120 0.008 170);
+  --color-ink-strong: oklch(0.060 0.005 170);
+
+  /* Primary — deep petrol teal. L=0.38 C=0.115 → white text on filled. */
+  --color-primary: oklch(0.380 0.115 170);
+  --color-primary-hover: oklch(0.320 0.120 170);
+  --color-primary-active: oklch(0.280 0.110 170);
+  --color-primary-light: oklch(0.920 0.035 170);
+
+  /* Accent — warm brass. L=0.58 C=0.125 → readable white text. */
+  --color-accent: oklch(0.580 0.125 65);
+  --color-accent-hover: oklch(0.520 0.130 65);
+  --color-accent-light: oklch(0.930 0.040 65);
+
+  /* Muted — ink pulled 40% toward bg. */
+  --color-muted: oklch(0.480 0.005 170);
+  --color-muted-strong: oklch(0.380 0.006 170);
+
+  /* Border — subtle, surface-adjacent. */
+  --color-border: oklch(0.900 0.003 170);
+  --color-border-strong: oklch(0.820 0.005 170);
+
+  /* Semantic — derived from palette. */
+  --color-success: oklch(0.480 0.110 145);
+  --color-warning: oklch(0.620 0.140 75);
+  --color-error: oklch(0.520 0.180 25);
+  --color-info: oklch(0.520 0.130 220);
+
+  /* Focus ring — primary at 60% opacity. */
+  --color-focus: oklch(0.380 0.115 170 / 0.60);
+
+  /* Overlay / backdrop. */
+  --color-overlay: oklch(0.060 0.005 170 / 0.55);
+
+  /* ── Typography ───────────────────────────────────────── */
+  /* Display: Didot — high-contrast serif for headlines */
+  /* UI: Suisse Intl (fallback: IBM Plex Sans) — Swiss precision */
+  /* Mono: IBM Plex Mono — technical details, prices */
+
+  --font-display: 'Didot', 'Bodoni Moda', Georgia, serif;
+  --font-display-weight: 400;
+  --font-display-weight-bold: 700;
+
+  --font-ui: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-ui-weight: 400;
+  --font-ui-weight-medium: 500;
+  --font-ui-weight-semibold: 600;
+  --font-ui-weight-bold: 700;
+
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-mono-weight: 400;
+  --font-mono-weight-medium: 500;
+
+  /* Fluid type scale (clamp) — caps at 6rem max. */
+  --text-xs: clamp(0.70rem, 0.68rem + 0.10vw, 0.75rem);
+  --text-sm: clamp(0.82rem, 0.78rem + 0.20vw, 0.875rem);
+  --text-base: clamp(0.95rem, 0.88rem + 0.35vw, 1.05rem);
+  --text-lg: clamp(1.10rem, 1.00rem + 0.50vw, 1.25rem);
+  --text-xl: clamp(1.30rem, 1.15rem + 0.75vw, 1.55rem);
+  --text-2xl: clamp(1.55rem, 1.35rem + 1.00vw, 1.95rem);
+  --text-3xl: clamp(1.90rem, 1.60rem + 1.50vw, 2.50rem);
+  --text-4xl: clamp(2.35rem, 1.90rem + 2.25vw, 3.20rem);
+  --text-5xl: clamp(3.00rem, 2.30rem + 3.50vw, 4.50rem);
+  --text-6xl: clamp(3.80rem, 2.80rem + 5.00vw, 6.00rem);
+
+  /* Line heights. */
+  --leading-tight: 1.10;
+  --leading-snug: 1.25;
+  --leading-normal: 1.50;
+  --leading-relaxed: 1.65;
+
+  /* Letter spacing. */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0.00em;
+  --tracking-wide: 0.03em;
+  --tracking-wider: 0.08em;
+
+  /* Text wrap. */
+  --text-wrap-balance: balance;
+  --text-wrap-pretty: pretty;
+
+  /* ── Spacing & Layout ─────────────────────────────────── */
+  /* Base unit: 4px. All spacing multiples of 4. */
+  --space-1: 0.25rem;   /* 4px  */
+  --space-2: 0.50rem;   /* 8px  */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1.00rem;   /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.50rem;   /* 24px */
+  --space-7: 1.75rem;   /* 28px */
+  --space-8: 2.00rem;   /* 32px */
+  --space-10: 2.50rem;  /* 40px */
+  --space-12: 3.00rem;  /* 48px */
+  --space-16: 4.00rem;  /* 64px */
+  --space-20: 5.00rem;  /* 80px */
+  --space-24: 6.00rem;  /* 96px */
+  --space-32: 8.00rem;  /* 128px */
+
+  /* Semantic spacing. */
+  --space-section: var(--space-16);
+  --space-component: var(--space-8);
+  --space-element: var(--space-4);
+  --space-inline: var(--space-2);
+  --space-touch-target: 2.75rem; /* 44px */
+
+  /* Container max widths. */
+  --container-sm: 640px;
+  --container-md: 896px;
+  --container-lg: 1152px;
+  --container-xl: 1344px;
+  --container-full: 100%;
+
+  /* Border radius. */
+  --radius-none: 0;
+  --radius-sm: 0.25rem;   /* 4px  */
+  --radius-md: 0.50rem;   /* 8px  */
+  --radius-lg: 0.75rem;   /* 12px */
+  --radius-xl: 1.00rem;   /* 16px */
+  --radius-2xl: 1.50rem;  /* 24px */
+  --radius-full: 9999px;
+
+  /* Semantic radius. */
+  --radius-button: var(--radius-md);
+  --radius-card: var(--radius-lg);
+  --radius-input: var(--radius-md);
+  --radius-badge: var(--radius-full);
+  --radius-modal: var(--radius-xl);
+  --radius-image: var(--radius-md);
+
+  /* ── Motion ───────────────────────────────────────────── */
+  /* Durations. */
+  --duration-instant: 0ms;
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-smooth: 300ms;
+  --duration-expressive: 500ms;
+
+  /* Easings — exponential out, no bounce. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.50, 1);
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Z-Index Scale ────────────────────────────────────── */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-drawer: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+
+  /* ── Breakpoints (Mobile-First) ───────────────────────── */
+  --bp-xs: 375px;
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
+  --bp-2xl: 1536px;
+}
+
+/* ── Dark Mode ──────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: oklch(0.055 0.000 0);
+    --color-bg-elevated: oklch(0.085 0.000 0);
+    --color-surface: oklch(0.085 0.003 170);
+    --color-surface-hover: oklch(0.110 0.004 170);
+    --color-ink: oklch(0.920 0.004 170);
+    --color-ink-strong: oklch(0.980 0.002 170);
+    --color-primary: oklch(0.620 0.130 170);
+    --color-primary-hover: oklch(0.680 0.135 170);
+    --color-primary-active: oklch(0.560 0.125 170);
+    --color-primary-light: oklch(0.180 0.045 170);
+    --color-accent: oklch(0.640 0.135 65);
+    --color-accent-hover: oklch(0.700 0.140 65);
+    --color-accent-light: oklch(0.200 0.050 65);
+    --color-muted: oklch(0.620 0.004 170);
+    --color-muted-strong: oklch(0.720 0.005 170);
+    --color-border: oklch(0.180 0.004 170);
+    --color-border-strong: oklch(0.250 0.006 170);
+    --color-focus: oklch(0.620 0.130 170 / 0.60);
+    --color-overlay: oklch(0.000 0.000 0 / 0.70);
+  }
+}
+
+/* ── Reduced Motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-smooth: 0ms;
+    --duration-expressive: 0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   GLOBAL RESET & BASE STYLES
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-focus);
+  border-radius: var(--radius-sm);
+}
+
+::selection {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* Skip link for accessibility. */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary);
+  color: var(--color-bg);
+  font-weight: 600;
+  border-radius: var(--radius-button);
+  z-index: var(--z-tooltip);
+  transition: top var(--duration-fast) var(--ease-out-quart);
+}
+.skip-link:focus { top: var(--space-4); }
+
+/* ============================================
+   UTILITY CLASSES (Design System Primitives)
+   ============================================ */
+
+/* Touch target enforcement. */
+.touch-target {
+  min-height: var(--space-touch-target);
+  min-width: var(--space-touch-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Typography utilities. */
+.text-balance { text-wrap: var(--text-wrap-balance); }
+.text-pretty { text-wrap: var(--text-wrap-pretty); }
+.font-display { font-family: var(--font-display); }
+.font-ui { font-family: var(--font-ui); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Container. */
+.container {
+  width: 100%;
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+@media (min-width: 640px) { .container { max-width: var(--container-md); padding: 0 var(--space-6); } }
+@media (min-width: 1024px) { .container { max-width: var(--container-lg); padding: 0 var(--space-8); } }
+@media (min-width: 1280px) { .container { max-width: var(--container-xl); padding: 0 var(--space-10); } }
+
+/* Screen reader only. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

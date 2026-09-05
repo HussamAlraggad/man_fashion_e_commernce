@@ -1,0 +1,27 @@
+{
+  "name": "man-fashion-ecommerce",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "front_end",
+    "back_end"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=front_end\" \"npm run dev --workspace=back_end\"",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm run test --workspaces",
+    "db:generate": "npm run db:generate --workspace=back_end",
+    "db:migrate": "npm run db:migrate --workspace=back_end",
+    "db:studio": "npm run db:studio --workspace=back_end",
+    "install:all": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --workspace=front_end && npm install --legacy-peer-deps --workspace=back_end"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "npm@10.8.0"
+}

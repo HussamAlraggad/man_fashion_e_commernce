@@ -1,0 +1,41 @@
+{
+  "name": "back_end",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx medusa dev",
+    "build": "tsc",
+    "start": "npx medusa start",
+    "migrate": "npx medusa db:migrate",
+    "migrate:create": "npx medusa db:migrate:create",
+    "seed": "npx medusa exec ./src/scripts/seed.ts",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "install:legacy": "npm install --legacy-peer-deps"
+  },
+  "dependencies": {
+    "@medusajs/medusa": "2.20.1",
+    "@medusajs/admin": "7.1.18",
+    "@medusajs/framework": "2.20.1",
+    "@medusajs/modules-sdk": "2.20.1",
+    "@medusajs/utils": "2.20.1",
+    "@medusajs/types": "2.20.1",
+    "@medusajs/icons": "2.20.1",
+    "pg": "^8.11.0",
+    "ioredis": "^5.4.0",
+    "stripe": "^14.0.0",
+    "cloudinary": "^2.0.0",
+    "@sendgrid/mail": "^8.1.0",
+    "zod": "^3.23.0",
+    "date-fns": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "@types/pg": "^8.11.0",
+    "typescript": "^5.4.0",
+    "eslint": "^8.57.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "tsx": "^4.7.0"
+  }
+}

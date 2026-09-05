@@ -1,0 +1,178 @@
+// Prisma Schema for Custom Tables (extends Medusa)
+// Run: npx prisma generate && npx prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER PROFILE & MEASUREMENTS
+// ============================================
+
+model UserProfile {
+  id              String    @id @default(cuid())
+  userId          String    @unique @map("user_id")  // Links to Medusa customer
+  firstName       String?   @map("first_name")
+  lastName        String?   @map("last_name")
+  phone           String?
+  dateOfBirth     DateTime? @map("date_of_birth")
+  avatarUrl       String?   @map("avatar_url")
+  marketingOptIn  Boolean   @default(false) @map("marketing_opt_in")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Measurements (all nullable - user controls)
+  heightCm        Float?    @map("height_cm")
+  weightKg        Float?    @map("weight_kg")
+  chestCm         Float?    @map("chest_cm")
+  waistCm         Float?    @map("waist_cm")
+  hipCm           Float?    @map("hip_cm")
+  shoulderCm      Float?    @map("shoulder_cm")
+  sleeveCm        Float?    @map("sleeve_cm")
+  inseamCm        Float?    @map("inseam_cm")
+  neckCm          Float?    @map("neck_cm")
+  wristCm         Float?    @map("wrist_cm")
+  bicepCm         Float?    @map("bicep_cm")
+  thighCm         Float?    @map("thigh_cm")
+  calfCm          Float?    @map("calf_cm")
+  shoeSizeEu      Float?    @map("shoe_size_eu")
+  shoeSizeUs      Float?    @map("shoe_size_us")
+  shoeSizeUk      Float?    @map("shoe_size_uk")
+  headCircumferenceCm Float? @map("head_circumference_cm")
+  handCircumferenceCm   Float? @map("hand_circumference_cm")
+
+  // Measurement metadata
+  measurementSource String?  @default("manual") @map("measurement_source") // manual, scanned, estimated
+  lastMeasuredAt    DateTime? @map("last_measured_at")
+  measurementNotes  String?  @map("measurement_notes")
+
+  // Relations
+  tryOnHistory     TryOnHistory[]
+  wishlist         WishlistItem[]
+  sizePreferences  SizePreference[]
+
+  @@map("user_profiles")
+}
+
+model SizePreference {
+  id            String   @id @default(cuid())
+  userProfileId String   @map("user_profile_id")
+  category      String   // e.g., "outerwear", "formal_wear", "footwear"
+  preferredSize String   @map("preferred_size") // e.g., "M", "42", "10.5"
+  brand         String?  // Brand-specific sizing
+  fitPreference String?  @default("regular") @map("fit_preference") // slim, regular, relaxed, oversized
+  notes         String?
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  userProfile UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([userProfileId, category, brand])
+  @@map("size_preferences")
+}
+
+// ============================================
+// VIRTUAL TRY-ON HISTORY
+// ============================================
+
+model TryOnHistory {
+  id              String   @id @default(cuid())
+  userProfileId   String   @map("user_profile_id")
+  productId       String   @map("product_id")       // Medusa product ID
+  productVariantId String? @map("product_variant_id")
+  garmentType     String   @map("garment_type")     // upper_body, lower_body, full_body, headwear, footwear, handwear
+  inputImageUrl   String   @map("input_image_url")  // User's photo (Cloudinary)
+  garmentImageUrl String   @map("garment_image_url") // Product image (Cloudinary)
+  resultImageUrl  String   @map("result_image_url") // fal.ai result (temp URL)
+  savedImageUrl   String?  @map("saved_image_url")  // Permanent copy in Cloudinary
+  status          String   @default("completed")    // pending, processing, completed, failed
+  processingTimeMs Int?    @map("processing_time_ms")
+  falRequestId    String?  @map("fal_request_id")
+  errorMessage    String?  @map("error_message")
+  isFavorite      Boolean  @default(false) @map("is_favorite")
+  isShared        Boolean  @default(false) @map("is_shared")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  userProfile UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+
+  @@index([userProfileId, createdAt])
+  @@index([productId])
+  @@map("try_on_history")
+}
+
+// ============================================
+// WISHLIST
+// ============================================
+
+model WishlistItem {
+  id              String   @id @default(cuid())
+  userProfileId   String   @map("user_profile_id")
+  productId       String   @map("product_id")
+  productVariantId String? @map("product_variant_id")
+  notes           String?
+  priority        Int      @default(0) // 0=low, 1=medium, 2=high
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  userProfile UserProfile @relation(fields: [userProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([userProfileId, productId, productVariantId])
+  @@map("wishlist_items")
+}
+
+// ============================================
+// PRODUCT EXTENSIONS (Custom fields for Medusa products)
+// ============================================
+
+model ProductExtension {
+  id              String   @id @default(cuid())
+  productId       String   @unique @map("product_id") // Medusa product ID
+  // Fit & Sizing
+  fitType         String?  @default("regular") @map("fit_type") // slim, regular, relaxed, oversized
+  sizeChartUrl    String?  @map("size_chart_url") // Cloudinary URL to size chart image
+  sizeChartData   Json?    @map("size_chart_data") // Structured size chart data
+  modelMeasurements Json?  @map("model_measurements") // What size model wears + their measurements
+  // Try-On
+  tryOnEnabled    Boolean  @default(true) @map("try_on_enabled")
+  tryOnType       String   @default("upper_body") @map("try_on_type") // upper_body, lower_body, full_body, headwear, footwear, handwear
+  tryOnGarmentImageUrl String? @map("try_on_garment_image_url") // Pre-processed garment image for try-on
+  // Attributes
+  fabricComposition Json?  @map("fabric_composition") // [{"material": "cotton", "percentage": 100}]
+  careInstructions  String? @map("care_instructions")
+  originCountry     String? @map("origin_country")
+  sustainabilityTags String[] @map("sustainability_tags")
+  // SEO
+  metaTitle         String? @map("meta_title")
+  metaDescription   String? @map("meta_description")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@map("product_extensions")
+}
+
+// ============================================
+// SIZE RECOMMENDATION LOG
+// ============================================
+
+model SizeRecommendationLog {
+  id              String   @id @default(cuid())
+  userProfileId   String   @map("user_profile_id")
+  productId       String   @map("product_id")
+  productVariantId String? @map("product_variant_id")
+  recommendedSize String   @map("recommended_size")
+  confidenceScore Float    @map("confidence_score") // 0-1
+  method          String   // size_chart_match, ml_model, user_history, manual
+  userMeasurements Json    @map("user_measurements") // Snapshot at time of recommendation
+  productSizeChart Json?   @map("product_size_chart")
+  accepted        Boolean? // Did user buy this size?
+  actualSize      String?  @map("actual_size") // What they actually ordered
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([userProfileId, productId])
+  @@map("size_recommendation_logs")
+}

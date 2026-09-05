@@ -1,0 +1,45 @@
+# Netlify Configuration for Frontend
+# This file is placed in front_end/ and also at root for reference
+
+[build]
+  base = "front_end"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_VERSION = "10"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-backend.onrender.com/api/:splat"
+  status = 200
+  conditions = {Role = ["admin"]}
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["**/*.ts", "**/*.js"]
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  targetPort = 3000
+  publish = ".next"

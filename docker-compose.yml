@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: man-fashion-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: man_fashion
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  medusa:
+    build:
+      context: ./back_end
+      dockerfile: Dockerfile
+    container_name: man-fashion-medusa
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/man_fashion
+      NODE_ENV: development
+      MEDUSA_BACKEND_URL: http://localhost:9000
+      MEDUSA_ADMIN_BACKEND_URL: http://localhost:9000
+      JWT_SECRET: ${JWT_SECRET:-supersecret_dev_only_change_in_prod}
+      COOKIE_SECRET: ${COOKIE_SECRET:-supersecret_dev_only_change_in_prod}
+      MEDUSA_PUBLISHABLE_KEY: ${MEDUSA_PUBLISHABLE_KEY:-pk_dev_123456789}
+      MEDUSA_WORKER_MODE: shared
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "9000:9000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./back_end:/app
+      - /app/node_modules
+
+  redis:
+    image: redis:7-alpine
+    container_name: man-fashion-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
